@@ -25,3 +25,6 @@ CONFIG += mobility
 MOBILITY = 
 
 include(pubnub/pubnub.pri)
+
+RESOURCES += \
+    demokit.qrc

@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/top_view_vw-up.png</file>
+        <file>images/button_lock.png</file>
+        <file>images/button_unlock.png</file>
+        <file>images/icon_locked.png</file>
+        <file>images/icon_unlocked.png</file>
+        <file>images/door_closed.png</file>
+        <file>images/door_open.png</file>
+        <file>images/seat_occupied.png</file>
+        <file>images/seat_unoccupied.png</file>
+    </qresource>
+</RCC>

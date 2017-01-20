@@ -29,6 +29,10 @@ private slots:
     void statusSeatRL(bool occupied);
     void statusSeatRR(bool occupied);
 
+    void on_pushButtonUnlock_clicked();
+
+    void on_pushButtonLock_clicked();
+
 private:
     Ui::MainWindow *ui;
 
