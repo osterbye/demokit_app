@@ -28,78 +28,54 @@ void PubNubReceiver::PubNubReceive(QString channel, QStringList messages)
     emit newVehicleStatus(messages);
 
     //PN_DBG("subscribe parsing");
-    //QList<QString> msg = d_pb_subscribe->get_all();
-    //for (int i = 0; i < msg.size(); ++i) {
     qDebug() << "number of messages: " << messages.size();
     for (int i = 0; i < messages.size(); ++i) {
         qDebug() << "subscribe message " + messages[i];
         QJsonValue valTrue("true");
         QJsonValue valFalse("false");
 
-        /*QJsonValue doorOpenFL(":doorOpenFL");
-        QJsonValue doorOpenFR(":doorOpenFR");
-        QJsonValue doorOpenRL(":doorOpenRL");
-        QJsonValue doorOpenRR(":doorOpenRR");
-        QJsonValue seatOccupiedFL(":seatOccupiedFL");
-        QJsonValue seatOccupiedFR(":seatOccupiedFR");
-        QJsonValue seatOccupiedRL(":seatOccupiedRL");
-        QJsonValue seatOccupiedRR(":seatOccupiedRR");
-        QJsonValue vehicleLocked(":vehicleLocked");*/
-
         QJsonDocument json = QJsonDocument::fromJson(messages[i].toUtf8());
         QJsonObject object = json.object();
 
-        QJsonValue status = object.value(":vehicleLocked");
+        QJsonValue status = object.value("vehicleLocked");
         if (!(status == QJsonValue::Undefined))
             emit newstatusLocked((status == valTrue));
 
-        status = object.value(":doorOpenFL");
+        status = object.value("doorOpenFL");
         if (!(status == QJsonValue::Undefined))
             emit newstatusDoorFL((status == valTrue));
-        status = object.value(":doorOpenFR");
+        status = object.value("doorOpenFR");
         if (!(status == QJsonValue::Undefined))
             emit newstatusDoorFR((status == valTrue));
-        status = object.value(":doorOpenRL");
+        status = object.value("doorOpenRL");
         if (!(status == QJsonValue::Undefined))
             emit newstatusDoorRL((status == valTrue));
-        status = object.value(":doorOpenRR");
+        status = object.value("doorOpenRR");
         if (!(status == QJsonValue::Undefined))
             emit newstatusDoorRR((status == valTrue));
 
-        // Occupied status is actually unoccupied status, so act in inverse
-        status = object.value(":seatOccupiedFL");
+        status = object.value("seatOccupiedFL");
         if (!(status == QJsonValue::Undefined))
-            emit newstatusSeatFL((status == valFalse));
-        status = object.value(":seatOccupiedFR");
+            emit newstatusSeatFL((status == valTrue));
+        status = object.value("seatOccupiedFR");
         if (!(status == QJsonValue::Undefined))
-            emit newstatusSeatFR((status == valFalse));
-        status = object.value(":seatOccupiedRL");
+            emit newstatusSeatFR((status == valTrue));
+        status = object.value("seatOccupiedRL");
         if (!(status == QJsonValue::Undefined))
-            emit newstatusSeatRL((status == valFalse));
-        status = object.value(":seatOccupiedRR");
+            emit newstatusSeatRL((status == valTrue));
+        status = object.value("seatOccupiedRR");
         if (!(status == QJsonValue::Undefined))
-            emit newstatusSeatRR((status == valFalse));
-
-
-        /*QJsonValue cmd = object.value("doorlock");
-        if (cmd == cmdLock) {
-            emit cmdRequestDoorLock(true);
-            //PN_DBG("LOCK THE DOOR");
-        } else if (cmd == cmdUnlock) {
-            emit cmdRequestDoorLock(false);
-            //PN_DBG("UNLOCK THE DOOR");
-        }*/
+            emit newstatusSeatRR((status == valTrue));
     }
 }
 
 void PubNubReceiver::vehicleLockRequest(bool lock)
 {
     QJsonObject jsonObj;
-    // Requests are acted on inversed, so we send unlock request in order to lock vehicle
     if (lock) {
-        jsonObj.insert("doorlock", "unlock");
-    } else {
         jsonObj.insert("doorlock", "lock");
+    } else {
+        jsonObj.insert("doorlock", "unlock");
     }
     m_handler->sendMessage("vehicle_cmd", QJsonDocument(jsonObj));
 }
